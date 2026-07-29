@@ -1,0 +1,29 @@
+{
+  "users": [
+    {
+      "id": "admin-1",
+      "name": "Admin",
+      "email": "admin@itemeofhope.org",
+      "password": "$2a$10$U6M6p3Bsh0Yg0yU.NreHwO8wV0fL/e7D4Zf5Z.rN/3x5m89qV1w1C",
+      "role": "superadmin",
+      "createdAt": "2026-07-29T08:29:30.914Z"
+    }
+  ],
+  "admins": [
+    {
+      "id": "admin-1",
+      "name": "Admin",
+      "email": "admin@itemeofhope.org",
+      "password": "$2a$10$U6M6p3Bsh0Yg0yU.NreHwO8wV0fL/e7D4Zf5Z.rN/3x5m89qV1w1C",
+      "role": "superadmin",
+      "createdAt": "2026-07-29T08:29:30.914Z"
+    }
+  ],
+  "children": [],
+  "staff": [],
+  "members": [],
+  "donations": [],
+  "reports": [],
+  "charityWeeks": [],
+  "messages": []
+}

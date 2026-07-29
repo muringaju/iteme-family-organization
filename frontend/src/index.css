@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  h1, h2, h3, h4 {
+    font-family: "Fraunces", serif;
+  }
+  ::selection {
+    background-color: #E8A33D;
+    color: #1B4332;
+  }
+  :focus-visible {
+    outline: 3px solid #E8A33D;
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply max-w-7xl mx-auto px-5 sm:px-8 lg:px-10;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gold px-6 py-3 font-semibold text-forest-dark
+           shadow-card transition-all duration-200 hover:bg-gold-light hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-forest px-6 py-3 font-semibold text-forest
+           transition-all duration-200 hover:bg-forest hover:text-ivory;
+  }
+
+  .btn-donate {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-rust px-6 py-3 font-semibold text-ivory
+           shadow-card transition-all duration-200 hover:bg-rust-light hover:-translate-y-0.5;
+  }
+
+  .eyebrow {
+    @apply font-mono text-xs uppercase tracking-[0.2em] text-gold-dark;
+  }
+
+  .card {
+    @apply rounded-2xl border border-forest/10 bg-white shadow-card;
+  }
+
+  .input-field {
+    @apply w-full rounded-xl border border-forest/20 bg-white px-4 py-3 text-ink placeholder:text-ink/40
+           focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition;
+  }
+
+  .label-field {
+    @apply mb-1.5 block text-sm font-semibold text-forest-dark;
+  }
+
+  .progress-track {
+    @apply h-2.5 w-full overflow-hidden rounded-full bg-forest/10;
+  }
+
+  .progress-fill {
+    @apply h-full rounded-full bg-gradient-to-r from-gold to-rust transition-all duration-500;
+  }
+}
