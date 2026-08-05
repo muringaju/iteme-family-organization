@@ -2,93 +2,176 @@ import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
+// =====================================================
+// NAVIGATION LINKS
+// =====================================================
+
 const links = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
   { to: "/students", label: "Vulnerable Students" },
   { to: "/charity-week", label: "Charity Week" },
+  { to: "/gallery", label: "Gallery" },
   { to: "/members", label: "Members" },
   { to: "/staff", label: "Staff" },
   { to: "/reports", label: "Reports" },
   { to: "/contact", label: "Contact" },
 ];
 
+// =====================================================
+// NAVBAR
+// =====================================================
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-forest/10 bg-ivory/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur">
+
       <div className="container-page flex h-20 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
-          <img src="/logo.png" alt="Iteme of Hope Family Organization" className="h-11 w-11 rounded-full object-cover" />
-          <span className="font-display text-lg font-semibold leading-none text-forest-dark">
+
+        {/* =====================================================
+            LOGO
+        ====================================================== */}
+
+        <Link
+          to="/"
+          className="flex items-center gap-2.5"
+          onClick={() => setOpen(false)}
+        >
+          <div className="rounded-full border-2 border-blue-100 bg-white p-0.5 shadow-sm">
+            <img
+              src="/logo.png"
+              alt="Iteme of Hope Family Organization"
+              className="h-11 w-11 rounded-full object-cover"
+            />
+          </div>
+
+          <span className="font-display text-lg font-bold leading-none text-[#07182B]">
             Iteme of Hope
-            <span className="block font-mono text-[10px] font-normal uppercase tracking-[0.25em] text-forest/60">
+
+            <span className="mt-1 block font-mono text-[9px] font-medium uppercase tracking-[0.22em] text-blue-600">
               Family Organization
             </span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex">
-          {links.map((l) => (
+        {/* =====================================================
+            DESKTOP NAVIGATION
+        ====================================================== */}
+
+        <nav className="hidden items-center gap-6 xl:flex">
+          {links.map((link) => (
             <NavLink
-              key={l.to}
-              to={l.to}
+              key={link.to}
+              to={link.to}
               className={({ isActive }) =>
-                `text-sm font-medium transition-colors hover:text-forest ${
-                  isActive ? "text-forest font-semibold" : "text-ink/70"
+                `relative text-sm font-medium transition-colors ${
+                  isActive
+                    ? "font-semibold text-blue-600"
+                    : "text-slate-600 hover:text-blue-600"
                 }`
               }
             >
-              {l.label}
+              {link.label}
             </NavLink>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
-          <Link to="/login" className="text-sm font-medium text-ink/60 hover:text-forest">
+        {/* =====================================================
+            DESKTOP ACTIONS
+        ====================================================== */}
+
+        <div className="hidden items-center gap-4 lg:flex">
+
+          <Link
+            to="/login"
+            className="text-sm font-medium text-slate-500 transition hover:text-blue-600"
+          >
             Admin
           </Link>
-          <Link to="/donate" className="btn-donate !px-5 !py-2.5 text-sm">
+
+          <Link
+            to="/donate"
+            className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md"
+          >
             Donate Now
           </Link>
+
         </div>
 
+        {/* =====================================================
+            MOBILE MENU BUTTON
+        ====================================================== */}
+
         <button
-          className="grid h-10 w-10 place-items-center rounded-full border border-forest/20 lg:hidden"
-          onClick={() => setOpen((o) => !o)}
-          aria-label="Toggle menu"
+          type="button"
+          className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white text-[#07182B] transition hover:border-blue-300 hover:text-blue-600 lg:hidden"
+          onClick={() => setOpen((value) => !value)}
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
         >
-          {open ? <X size={20} /> : <Menu size={20} />}
+          {open ? <X size={21} /> : <Menu size={21} />}
         </button>
+
       </div>
 
+      {/* =====================================================
+          MOBILE MENU
+      ====================================================== */}
+
       {open && (
-        <div className="border-t border-forest/10 bg-ivory lg:hidden">
+        <div className="border-t border-slate-200 bg-white lg:hidden">
+
           <nav className="container-page flex flex-col gap-1 py-4">
-            {links.map((l) => (
+
+            {links.map((link) => (
               <NavLink
-                key={l.to}
-                to={l.to}
+                key={link.to}
+                to={link.to}
                 onClick={() => setOpen(false)}
                 className={({ isActive }) =>
-                  `rounded-lg px-3 py-2.5 text-sm font-medium ${
-                    isActive ? "bg-forest/10 text-forest" : "text-ink/70"
+                  `rounded-xl px-4 py-3 text-sm font-medium transition ${
+                    isActive
+                      ? "bg-blue-50 font-semibold text-blue-700"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-blue-600"
                   }`
                 }
               >
-                {l.label}
+                {link.label}
               </NavLink>
             ))}
-            <Link to="/login" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink/60">
+
+            {/* =================================================
+                ADMIN LOGIN
+            ================================================== */}
+
+            <Link
+              to="/login"
+              onClick={() => setOpen(false)}
+              className="mt-2 rounded-xl px-4 py-3 text-sm font-medium text-slate-500 transition hover:bg-slate-50 hover:text-blue-600"
+            >
               Admin Login
             </Link>
-            <Link to="/donate" onClick={() => setOpen(false)} className="btn-donate mt-2 text-sm">
+
+            {/* =================================================
+                DONATE
+            ================================================== */}
+
+            <Link
+              to="/donate"
+              onClick={() => setOpen(false)}
+              className="mt-2 inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700"
+            >
               Donate Now
             </Link>
+
           </nav>
+
         </div>
       )}
+
     </header>
   );
 }
+

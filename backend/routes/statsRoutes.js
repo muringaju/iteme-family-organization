@@ -1,38 +1,96 @@
 import express from "express";
-import { db } from "../config/db.js";
-import { protect } from "../middleware/auth.js";
+
+import Child from "../models/Child.js";
+import Donation from "../models/Donation.js";
+import Member from "../models/Member.js";
+import Message from "../models/Message.js";
+import Report from "../models/Report.js";
+import Staff from "../models/Staff.js";
+import CharityWeek from "../models/CharityWeek.js";
 
 const router = express.Router();
 
-router.get("/", protect, async (req, res) => {
-  await db.read();
-  const {
-    children,
-    staff,
-    members,
-    donations,
-    reports,
-    charityWeeks,
-    messages,
-  } = db.data;
+router.get("/", async (req, res) => {
+  try {
+    const [
+      totalChildren,
+      fullySponsoredChildren,
+      totalStaff,
+      totalMembers,
+      totalReports,
+      unreadMessages,
+      totalDonations,
+      donationTotals,
+      activeCharityWeek,
+    ] = await Promise.all([
+      Child.countDocuments(),
 
-  const totalRaised = donations.reduce((sum, d) => sum + Number(d.amount || 0), 0);
-  const sponsoredChildren = children.filter((c) => Number(c.amountRaised || 0) >= Number(c.feeNeeded || 0) && Number(c.feeNeeded || 0) > 0).length;
-  const unreadMessages = messages.filter((m) => !m.read).length;
-  const activeCharityWeek = charityWeeks.find((cw) => cw.status === "active");
+      Child.countDocuments({
+        status: "sponsored",
+      }),
 
-  res.json({
-    totalChildren: children.length,
-    fullySponsoredChildren: sponsoredChildren,
-    totalStaff: staff.length,
-    totalMembers: members.length,
-    totalDonations: donations.length,
-    totalRaised,
-    totalReports: reports.length,
-    totalCharityWeeks: charityWeeks.length,
-    activeCharityWeek: activeCharityWeek || null,
-    unreadMessages,
-  });
+      Staff.countDocuments(),
+
+      Member.countDocuments(),
+
+      Report.countDocuments(),
+
+      Message.countDocuments({
+        read: false,
+      }),
+
+      Donation.countDocuments(),
+
+      Donation.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalRaised: {
+              $sum: "$amount",
+            },
+          },
+        },
+      ]),
+
+      CharityWeek.findOne({
+        status: "active",
+      }).lean(),
+    ]);
+
+    const totalRaised = Number(
+      donationTotals[0]?.totalRaised || 0
+    );
+
+    res.status(200).json({
+      success: true,
+
+      totalChildren,
+
+      fullySponsoredChildren,
+
+      totalRaised,
+
+      totalDonations,
+
+      totalStaff,
+
+      totalMembers,
+
+      totalReports,
+
+      unreadMessages,
+
+      activeCharityWeek,
+    });
+  } catch (error) {
+    console.error("GET /api/stats ERROR:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to load dashboard stats",
+      error: error.message,
+    });
+  }
 });
 
 export default router;

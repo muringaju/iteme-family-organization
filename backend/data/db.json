@@ -1,44 +1,20 @@
 {
   "admins": [
     {
-      "id": "admin-1",
+      "id": "1e3b1920-ba29-44b6-aa3d-da4abbdc5f72",
       "name": "Admin",
       "email": "admin@itemeofhope.org",
-      "password": "$2a$10$hJ9SsTZaw31RC1e.0boeyeeapbRWF5iSyY2co66DCsKb/xzxUnGvW",
+      "password": "$2a$10$vsK18JaN07Hz0uhJ4tYBYO76brDFvE4PcB9jqdCn7w.JmBsTMw61m",
       "role": "superadmin",
-      "createdAt": "2026-07-29T08:29:30.914Z"
+      "createdAt": "2026-08-02T16:56:47.124Z"
     }
   ],
-  "children": [
-    {
-      "id": "d2892434-94f7-46c5-a8e7-bdf95e70c567",
-      "fullName": "kages",
-      "age": "20",
-      "grade": "s3",
-      "district": "kayonza",
-      "story": "The organization continues to grow with the vision of “Building Bridges of Hope” by connecting people, resources, and opportunities to transform lives. Through commitment, compassion, and partnership, ITEME of HOPE FAMILY FOUNDATION aims to contribute to a future where every child has access to education, opportunities, and a chance to achieve their dreams.",
-      "feeNeeded": "5000",
-      "amountRaised": "5000",
-      "status": "urgent",
-      "createdAt": "2026-07-29T09:43:41.570Z",
-      "updatedAt": "2026-07-29T09:53:10.321Z",
-      "image": "/uploads/1785318790263-412668190.png"
-    }
-  ],
-  "staff": [],
-  "members": [
-    {
-      "id": "41fb129b-8785-4d47-916d-0f58577f6f14",
-      "name": "Mariko Thierry",
-      "membershipType": "Board Member",
-      "joinedDate": "2026-07-29",
-      "contact": "0789299056",
-      "createdAt": "2026-07-29T09:45:39.089Z",
-      "image": "/uploads/1785318339034-625743384.jpeg"
-    }
-  ],
-  "donations": [],
-  "reports": [],
+  "children": [],
   "charityWeeks": [],
-  "messages": []
+  "donations": [],
+  "members": [],
+  "messages": [],
+  "reports": [],
+  "staff": [],
+  "stats": []
 }

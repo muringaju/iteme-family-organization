@@ -5,7 +5,7 @@ a Rwanda-based nonprofit that pays school fees for vulnerable students and helps
 self-reliant.
 
 - **Frontend:** React (Vite) + Tailwind CSS
-- **Backend:** Node.js + Express + lowdb (a simple JSON file database — no external database to install)
+- **Backend:** Node.js + Express + Mongoose + MongoDB (with an in-memory MongoDB fallback for local development)
 - **Auth:** JWT-based admin login
 - **Uploads:** Photos are stored locally on the server and served from `/uploads`
 
@@ -31,38 +31,41 @@ self-reliant.
 
 ## 1. Backend setup
 
+From the repository root:
+
 ```bash
-cd backend
-cp .env.example .env
 npm install
-npm run seed     # loads sample students, staff, members, a charity week, etc. (optional but recommended)
-npm run dev       # starts on http://localhost:5000
+npm run dev:backend
 ```
 
-Open `.env` and set:
+To run the backend with a real MongoDB instance instead of the in-memory development fallback, create `backend/.env` from `backend/.env.example` and set:
+- `MONGODB_URI` — your MongoDB connection string
 - `JWT_SECRET` — any long random string
 - `ADMIN_EMAIL` / `ADMIN_PASSWORD` — the login created automatically the first time the server runs
+
+If no `MONGODB_URI` is set, the backend automatically falls back to an in-memory MongoDB server for local testing.
 
 **Default admin login** (unless you changed `.env` before first run):
 - Email: `admin@itemeofhope.org`
 - Password: `ChangeMe123!`
 
-⚠️ Change this password immediately after your first login by editing `backend/data/db.json`,
-or extend the admin panel with a "change password" screen — the API scaffolding
-(`POST /api/auth/register`, protected, superadmin only) already lets a superadmin create
-additional admin/staff logins.
+The API starts on `http://localhost:5001` by default.
 
 ## 2. Frontend setup
 
+From the repository root:
+
 ```bash
-cd frontend
-cp .env.example .env    # points to http://localhost:5000/api by default
-npm install
-npm run dev              # starts on http://localhost:5173
+npm run dev:frontend
 ```
 
-Visit `http://localhost:5173` for the public site, and `http://localhost:5173/login` to sign in
-to the admin dashboard.
+Or, if you want to run both together:
+
+```bash
+npm run dev
+```
+
+The frontend runs on `http://localhost:5173` and the public site is available there. The admin dashboard is at `/login`.
 
 ## 3. Building for production
 
@@ -75,9 +78,8 @@ Deploy `frontend/dist` to any static host (Netlify, Vercel, etc.), and deploy th
 folder to any Node host (Render, Railway, a VPS, etc.). Set `CLIENT_URL` in the backend `.env`
 to your deployed frontend URL, and `VITE_API_URL` in the frontend `.env` to your deployed backend URL.
 
-For real production use, consider swapping `lowdb` for a proper database (PostgreSQL, MongoDB)
-once your data grows — the CRUD route structure in `backend/routes/crudFactory.js` maps cleanly
-onto that migration.
+The project is now set up for MongoDB-backed persistence by default, with a development fallback to an
+in-memory MongoDB instance when no `MONGODB_URI` is provided.
 
 ---
 
@@ -86,19 +88,19 @@ onto that migration.
 ```
 iteme-family-organization/
 ├── backend/
-│   ├── config/db.js          # lowdb setup + default admin seeding
+│   ├── config/db.js          # MongoDB connection + default admin seeding
 │   ├── middleware/           # auth (JWT) + image upload (multer)
 │   ├── routes/                # one file per resource + a shared CRUD factory
-│   ├── data/db.json           # the "database" (auto-created)
 │   ├── data/seed.js           # sample content loader
 │   └── server.js
-└── frontend/
-    └── src/
-        ├── components/        # Navbar, Footer, cards, shared UI
-        ├── pages/              # public site pages
-        ├── admin/              # admin dashboard + generic ResourceManager
-        ├── context/AuthContext.jsx
-        └── api/axios.js
+├── frontend/
+│   └── src/
+│       ├── components/        # Navbar, Footer, cards, shared UI
+│       ├── pages/              # public site pages
+│       ├── admin/              # admin dashboard + generic ResourceManager
+│       ├── context/AuthContext.jsx
+│       └── api/axios.js
+└── package.json               # root scripts for running backend/frontend together
 ```
 
 ---

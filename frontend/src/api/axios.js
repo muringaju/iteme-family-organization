@@ -1,24 +1,40 @@
+
 import axios from "axios";
-import Avatar from "../components/Avatar.jsx";
 
-const API_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-
-// Base URL for uploaded images/files
-export const ASSET_BASE = API_URL.replace(/\/api\/?$/, "");
+export const ASSET_BASE =
+  "http://localhost:5001";
 
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL:
+    "http://localhost:5001/api",
+
+  headers: {
+    Accept: "application/json",
+  },
 });
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("iteme_token");
+// =====================================================
+// AUTH TOKEN
+// =====================================================
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+api.interceptors.request.use(
+  (config) => {
+    const token =
+      localStorage.getItem(
+        "iteme_token"
+      );
 
-  return config;
-});
+    if (token) {
+      config.headers.Authorization =
+        `Bearer ${token}`;
+    }
+
+    return config;
+  },
+
+  (error) =>
+    Promise.reject(error)
+);
 
 export default api;
+

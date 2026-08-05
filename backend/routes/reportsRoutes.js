@@ -1,6 +1,8 @@
 import { buildCrudRouter } from "./crudFactory.js";
 
-// Annual / financial / activity reports (image field doubles as a cover image)
-const router = buildCrudRouter("reports", { withImage: true, publicRead: true });
+const router = buildCrudRouter("reports", {
+  withImage: false,
+  publicRead: true,
+});
 
 export default router;

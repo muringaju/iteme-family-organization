@@ -5,7 +5,7 @@ import api from "../api/axios.js";
 import SectionHeading from "../components/SectionHeading.jsx";
 
 const methods = [
-  { id: "Mobile Money", label: "Mobile Money", icon: Smartphone, hint: "MTN / Airtel — *182*8*1# then Merchant Code 123456" },
+  { id: "Mobile Money", label: "Mobile Money", icon: Smartphone, hint: "MTN / Airtel — *182*8*1# then Merchant MOM 0795802380" },
   { id: "Bank Transfer", label: "Bank Transfer", icon: Landmark, hint: "Bank of Kigali · Acc No. 000-111-2222 · Iteme of Hope Family Organization" },
   { id: "International", label: "International Card / Wire", icon: Globe2, hint: "We'll email secure payment instructions after you submit" },
 ];

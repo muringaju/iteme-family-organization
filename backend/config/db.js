@@ -1,51 +1,50 @@
-import { Low } from "lowdb";
-import { JSONFile } from "lowdb/node";
-import path from "path";
-import { fileURLToPath } from "url";
+import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import "dotenv/config";
+import { MongoMemoryServer } from "mongodb-memory-server";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const file = path.join(__dirname, "..", "data", "db.json");
+import Admin from "../models/Admin.js";
 
-const defaultData = {
-  admins: [],
-  children: [],
-  staff: [],
-  members: [],
-  donations: [],
-  reports: [],
-  charityWeeks: [],
-  messages: [],
-};
-
-const adapter = new JSONFile(file);
-export const db = new Low(adapter, defaultData);
+let memoryMongoServer;
 
 export async function initDB() {
-  await db.read();
-  db.data ||= defaultData;
+  const uri = process.env.MONGODB_URI;
 
-  // Make sure every collection exists even for older db.json files
-  for (const key of Object.keys(defaultData)) {
-    if (!db.data[key]) db.data[key] = defaultData[key];
+  if (!uri) {
+    memoryMongoServer = await MongoMemoryServer.create();
+    console.log(
+      `Using in-memory MongoDB server at ${memoryMongoServer.getUri()}`
+    );
   }
 
-  // Seed a default admin account on first run
-  if (db.data.admins.length === 0) {
-    const password = process.env.ADMIN_PASSWORD || "ChangeMe123!";
-    const hashed = await bcrypt.hash(password, 10);
-    db.data.admins.push({
-      id: "admin-1",
-      name: process.env.ADMIN_NAME || "Admin",
-      email: process.env.ADMIN_EMAIL || "admin@itemeofhope.org",
-      password: hashed,
+  await mongoose.connect(uri || memoryMongoServer.getUri(), {
+    dbName: process.env.MONGO_DB_NAME || "iteme-family-organization",
+  });
+
+  console.log("Connected to MongoDB");
+
+  const adminEmail = (process.env.ADMIN_EMAIL || "admin@itemeofhope.org").toLowerCase();
+  const adminExists = await Admin.findOne({ email: adminEmail }).lean();
+
+  if (!adminExists) {
+    const adminName = process.env.ADMIN_NAME || "Admin";
+    const adminPassword = process.env.ADMIN_PASSWORD || "ChangeMe123!";
+    const hashedPassword = await bcrypt.hash(adminPassword, 10);
+
+    await Admin.create({
+      name: adminName,
+      email: adminEmail,
+      password: hashedPassword,
       role: "superadmin",
-      createdAt: new Date().toISOString(),
     });
-    console.log("Seeded default admin:", process.env.ADMIN_EMAIL);
-  }
 
-  await db.write();
-  return db;
+    console.log(`Seeded default admin: ${adminEmail}`);
+  }
+}
+
+export async function closeDB() {
+  await mongoose.disconnect();
+
+  if (memoryMongoServer) {
+    await memoryMongoServer.stop();
+  }
 }
