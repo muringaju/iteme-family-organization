@@ -1,11 +1,12 @@
-
 import axios from "axios";
 
 export const ASSET_BASE =
+  import.meta.env.VITE_API_BASE_URL?.replace("/api", "") ||
   "http://localhost:5001";
 
 const api = axios.create({
   baseURL:
+    import.meta.env.VITE_API_BASE_URL ||
     "http://localhost:5001/api",
 
   headers: {
@@ -13,28 +14,17 @@ const api = axios.create({
   },
 });
 
-// =====================================================
-// AUTH TOKEN
-// =====================================================
-
 api.interceptors.request.use(
   (config) => {
-    const token =
-      localStorage.getItem(
-        "iteme_token"
-      );
+    const token = localStorage.getItem("iteme_token");
 
     if (token) {
-      config.headers.Authorization =
-        `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
 
     return config;
   },
-
-  (error) =>
-    Promise.reject(error)
+  (error) => Promise.reject(error)
 );
 
 export default api;
-
